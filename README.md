@@ -37,7 +37,7 @@ uv run python main.py --mode b
 ## ドキュメント
 - [評価指標の計算仕様 (docs/metrics_guide.md)](docs/metrics_guide.md)
 - [キーマップJSONの仕様 (docs/keymap_format.md)](docs/keymap_format.md)
-- [サンプルキーマップ (examples/)](examples/README.md)
+- [結果サンプル (examples/)](examples/README.md)
 
 ## 主な指標
 - **打鍵負荷 (Effort/字)**: スイッチ押下、移動距離、段・列到達、SFBペナルティの合計。
