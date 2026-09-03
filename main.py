@@ -20,7 +20,8 @@ def run_benchmark(
     keymaps_dir: str = "data/keymaps",
     generated_dir: str = "data/generated",
     chords_dir: str = "data/chords_generated",
-    mode: str = "all"
+    mode: str = "all",
+    show_words: bool = True
 ):
     keymap_files = [f for f in sorted(os.listdir(keymaps_dir)) if f.endswith(".json")]
     if not keymap_files:
@@ -98,6 +99,10 @@ def run_benchmark(
         composite_results=composite_results
     )
 
+    # 5. Display Word Diagnostics (Best / Worst Words)
+    if show_words and results_b:
+        reporter.print_words_diagnostics(results_b)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Japanese Keyboard Layout Benchmark Tool")
     parser.add_argument(
@@ -111,9 +116,15 @@ if __name__ == "__main__":
         default="data/keymaps",
         help="Directory containing keymap JSON definitions (default: data/keymaps)"
     )
+    parser.add_argument(
+        "--no-words",
+        action="store_true",
+        help="Do not display best and worst words diagnostics"
+    )
     args = parser.parse_args()
 
     run_benchmark(
         keymaps_dir=args.keymaps_dir,
-        mode=args.mode
+        mode=args.mode,
+        show_words=not args.no_words
     )

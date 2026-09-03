@@ -10,7 +10,6 @@ import unicodedata
 from typing import Dict, List, Tuple, Optional
 
 # Standard key symbol aliases
-# Uses ' ' (half-width space) for Left Thumb Shift, and '　' (full-width space) for Right Thumb Shift
 KEY_ALIASES = {
     'semicolon': ';',
     'colon': ':',
@@ -88,7 +87,6 @@ class LayoutConverter:
         self.kana_to_stroke: Dict[str, Tuple[str, str, bool, List[str]]] = {}
         self._build_lookup_table()
 
-
     def _build_lookup_table(self):
         behavior = self.keymap.get("behavior", {})
         config = behavior.get("config", {})
@@ -101,17 +99,16 @@ class LayoutConverter:
                     continue
                 if kana:
                     kana = katakana_to_hiragana(kana)
-                    # Sequential strokes are not simultaneous chords
                     norm_keys = [normalize_key_token(c) for c in stroke]
                     flat_stroke = "".join(norm_keys)
                     if kana not in self.kana_to_stroke or len(stroke) < len(self.kana_to_stroke[kana][0]):
                         self.kana_to_stroke[kana] = (flat_stroke, flat_stroke, False, norm_keys)
                         
         # 2. Chord lookupTable (e.g. Naginata, Shin-Geta, Nicola: Simultaneous chords)
-        lookup_table = config.get("lookupTable", {})
+        lookup_table = config.get("lookupTable", {}) or self.keymap.get("lookupTable", {})
         if lookup_table:
             for chord_str, kana in lookup_table.items():
-                if not kana:
+                if chord_str.startswith("_comment") or not kana:
                     continue
                 kana = katakana_to_hiragana(kana)
                 keys = chord_str.split("+") if "+" in chord_str else chord_str.split()
@@ -244,7 +241,6 @@ class LayoutConverter:
                     i += len(pat)
                     matched = True
                     break
-
             
             if not matched:
                 char = text[i]
@@ -266,7 +262,6 @@ class LayoutConverter:
                 
         return events
 
-
 def convert_corpus_for_all_keymaps(
     corpus_file: str = "data/corpus/source_hiragana.txt",
     keymaps_dir: str = "data/keymaps",
@@ -286,7 +281,7 @@ def convert_corpus_for_all_keymaps(
         layout_id = filename[:-5]
         keymap_path = os.path.join(keymaps_dir, filename)
         
-        romaji_table = "data/romaji_tables/azik.json" if "azik" in layout_id.lower() else "data/romaji_tables/standard_romaji.json"
+        romaji_table = "data/romaji_tables/azik.json" if "azik" in layout_id.lower() and os.path.exists("data/romaji_tables/azik.json") else "data/romaji_tables/standard_romaji.json"
         
         converter = LayoutConverter(keymap_path, romaji_table)
         flat_keystrokes, annotated_keystrokes, chord_count = converter.convert_text(text)

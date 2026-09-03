@@ -1,14 +1,20 @@
-refs/*
-docs/neo_k_layout.png
-docs/neo_k_youon.png
-
-# Python-generated files
+# Python
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+.env
 
-# Virtual environments
-.venv
+# Generated intermediate evaluation text files
+data/generated/*.source.txt
+data/chords_generated/*.source.txt
+!data/generated/.gitkeep
+!data/chords_generated/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

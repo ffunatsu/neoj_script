@@ -8,6 +8,8 @@
 
 `data/keymaps/` ディレクトリにキーマップ定義ファイル（JSON形式）を配置して実行することで、対象配列の打鍵負荷、運指移動距離、同指連続率、ハサミ討ち等の流暢度指標および総合スコアを算出して出力します。
 
+初期状態で標準的なサンプル（JISかな、QWERTYローマ字）が `data/keymaps/` に配置されています。
+
 ---
 
 ## 2. 必要要件
@@ -18,7 +20,6 @@
 ### 依存パッケージのインストール
 
 ```bash
-# pip install uv
 uv sync
 ```
 
@@ -26,12 +27,15 @@ uv sync
 
 ## 3. 使い方
 
-1. `data/keymaps/` にキーマップ定義ファイル（`.json`）を配置します。
+1. `data/keymaps/` に評価したいキーマップ定義ファイル（`.json`）を配置します。
 2. スクリプトを実行します。
 
 ```bash
-# 全ての評価を実行（NeoJ-A 物理負荷・NeoJ-B 流暢度・総合スコア）
+# 全ての評価を実行（NeoJ-A 物理負荷・NeoJ-B 流暢度・単語診断・総合スコア）
 uv run python main.py
+
+# 単語診断テーブルを省略してサマリ表のみ表示
+uv run python main.py --no-words
 
 # NeoJ-A（物理負荷・Effort）のみ評価
 uv run python main.py --mode a
@@ -42,12 +46,14 @@ uv run python main.py --mode b
 
 ---
 
-## 4. ドキュメント一覧
+## 4. ドキュメント・サンプル一覧
 
 - **[評価尺度・計算仕様書 (docs/metrics_guide.md)](docs/metrics_guide.md)**:
   NeoJ-A（物理仕事量モデル）、NeoJ-B（運指流暢度・単語ボトルネックモデル）、および幾何平均による Composite Index の算定式とパラメータ詳細仕様。
 - **[キーマップJSON仕様書 (docs/keymap_format.md)](docs/keymap_format.md)**:
   キーマップ定義ファイルで利用可能なフィールド、定数（`behavior.type`, `shiftType`, `roles` 等）、およびマッピング記法（`inputMappings`, `lookupTable`, `keyRemap`）の完全な仕様。
+- **[実行サンプル (examples/)](examples/README.md)**:
+  QWERTYローマ字およびJISかなのキーマップJSONサンプルと実行出力例。
 
 ---
 

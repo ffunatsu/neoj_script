@@ -1,6 +1,6 @@
 """
 Benchmark Output Formatter for Keyboard Layout Evaluations.
-Displays evaluation metrics and scores in clean tables without marketing rhetoric.
+Displays evaluation metrics, scores, and word diagnostics (best/worst words) in clean tables.
 """
 from typing import List, Optional
 from rich.console import Console
@@ -8,7 +8,7 @@ from rich.table import Table
 from rich import box
 
 from .analyzer import LayoutAnalysisResult
-from .analyzer_b import LayoutAnalysisResultB
+from .analyzer_b import LayoutAnalysisResultB, WordAnalysisResult
 from .composite import CompositeResult
 
 class BenchmarkReporter:
@@ -21,7 +21,7 @@ class BenchmarkReporter:
         results_b: Optional[List[LayoutAnalysisResultB]] = None,
         composite_results: Optional[List[CompositeResult]] = None
     ):
-        """Print evaluated layouts and their metrics in a clean table."""
+        """Print evaluated layouts and their summary metrics in a clean table."""
         if not results_a:
             self.console.print("[yellow]評価対象の配列データがありません。[/yellow]")
             return
@@ -85,3 +85,65 @@ class BenchmarkReporter:
         self.console.print()
         self.console.print(table)
         self.console.print()
+
+    def print_words_diagnostics(self, results_b: List[LayoutAnalysisResultB]):
+        """Print top 10 easiest (best) and hardest (worst) words for each evaluated layout."""
+        if not results_b:
+            return
+
+        for r in results_b:
+            self.console.print(f"[bold cyan]■ {r.layout_name}[/bold cyan] （流暢度スコア: [bold green]{r.fluency_score:.1f}[/bold green] / 快適単語率: [bold magenta]{r.smooth_words_ratio_pct:.1f}%[/bold magenta]）")
+            
+            # 1. Best Words Table (打ちやすい単語 Top 10)
+            table_best = Table(
+                title=f"✨ 最も打ちやすい単語 Top 10 ({r.layout_name})",
+                box=box.ROUNDED,
+                header_style="bold green",
+                show_lines=False
+            )
+            table_best.add_column("No", justify="center", style="dim")
+            table_best.add_column("単語", style="bold")
+            table_best.add_column("打鍵列 (QWERTY)", style="cyan")
+            table_best.add_column("難易度", justify="right")
+            table_best.add_column("最大負荷", justify="right")
+            table_best.add_column("快適な理由・運指特性", style="white")
+
+            for i, w in enumerate(r.best_words[:10], 1):
+                reason = w.pleasant_reason_desc if w.pleasant_reason_desc else "段交差なし・軽快リズム運指"
+                table_best.add_row(
+                    str(i),
+                    w.word,
+                    w.keystrokes_repr,
+                    f"{w.difficulty_score:.2f}",
+                    f"{w.peak_strain:.2f}",
+                    reason
+                )
+
+            self.console.print(table_best)
+
+            # 2. Worst Words Table (打ちにくい単語 Top 10)
+            table_worst = Table(
+                title=f"⚠️ 最も打ちにくい単語 Top 10 ({r.layout_name})",
+                box=box.ROUNDED,
+                header_style="bold red",
+                show_lines=False
+            )
+            table_worst.add_column("No", justify="center", style="dim")
+            table_worst.add_column("単語", style="bold")
+            table_worst.add_column("打鍵列 (QWERTY)", style="cyan")
+            table_worst.add_column("難易度", justify="right")
+            table_worst.add_column("最大負荷", justify="right")
+            table_worst.add_column("主な不快原因・ボトルネック遷移", style="yellow")
+
+            for i, w in enumerate(r.worst_words[:10], 1):
+                table_worst.add_row(
+                    str(i),
+                    w.word,
+                    w.keystrokes_repr,
+                    f"{w.difficulty_score:.2f}",
+                    f"{w.peak_strain:.2f}",
+                    w.worst_transition_desc
+                )
+
+            self.console.print(table_worst)
+            self.console.print()
