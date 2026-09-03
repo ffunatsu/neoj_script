@@ -1,9 +1,10 @@
 [project]
-name = "neo-k"
+name = "neoj-script"
 version = "0.1.0"
-description = "Add your description here"
+description = "Japanese Keyboard Layout Benchmark & Workload Analysis Framework"
 readme = "README.md"
 requires-python = ">=3.13"
+license = { text = "AGPL-3.0-only" }
 dependencies = [
     "matplotlib>=3.11.1",
     "numpy>=2.5.2",

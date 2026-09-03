@@ -76,3 +76,12 @@ uv run python main.py --mode b
 ### 総合スコア (Composite Score, 0-100 pt)
 
 - 物理仕事量スコア（純粋・同期考慮）と運指流暢度スコアを幾何平均で統合した総合指標。
+
+---
+
+## 6. ライセンスおよび謝辞
+
+本プロジェクトは、プログラム本体およびサードパーティ成果物の権利関係を明確に定めています。詳細は **[LICENSE.md](LICENSE.md)** をご覧ください。
+
+- **プログラム本体**: [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE-AGPL)
+- **hechima プロジェクト（JSON定義構造・変換機構の設計）**: [MIT License (Copyright (c) 2026 msonrm)](LICENSE_HECHIMA) / [GitHub](https://github.com/msonrm/hechima)
