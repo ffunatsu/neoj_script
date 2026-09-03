@@ -1,0 +1,14 @@
+refs/*
+docs/neo_k_layout.png
+docs/neo_k_youon.png
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
