@@ -14,6 +14,7 @@
 - [uv](https://github.com/astral-sh/uv) (または pip)
 
 ```bash
+# pip install uv
 uv sync
 ```
 
