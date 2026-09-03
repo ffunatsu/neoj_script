@@ -12,7 +12,7 @@
 1. **`sample_qwerty_romaji.json`**:
    デファクトスタンダードである QWERTY ローマ字入力の定義です。
 2. **`sample_jis_kana.json`**:
-   JIS X 6002 標準かな入力（4段単打＋濁点/半濁点後置）の定義です。
+   JIS X 6002 標準かな入力 の定義です。
 
 ---
 
